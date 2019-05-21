@@ -1,0 +1,71 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+   name: wso2appm
+  name: wso2appm
+  namespace: wso2-suite
+spec:
+  ports:
+  - name: https
+    port: 9445
+    protocol: TCP
+    targetPort: 9445
+
+  - name: http
+    port: 9765
+    protocol: TCP
+    targetPort: 9765
+
+  - name: nioa
+    port: 8245
+    protocol: TCP
+    targetPort: 8245
+
+  - name: niob
+    port: 8282
+    protocol: TCP
+    targetPort: 8282
+
+  - name: thra
+    port: 10397
+    protocol: TCP
+    targetPort: 10397
+
+  - name: thrb
+    port: 7713
+    protocol: TCP
+    targetPort: 7713
+
+  selector:
+    name: wso2appm
+  type: LoadBalancer
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  labels:
+    name: wso2appm
+  name: wso2appm
+  namespace: wso2-suite
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: wso2appm
+  template:
+    metadata:
+      labels:
+        name: wso2appm
+    spec:
+      containers:
+      - image: dipayan/wso2-appm
+        imagePullPolicy: Always
+        name: wso2appm
+        resources:
+          requests:
+            cpu: 400m
+      imagePullSecrets:
+      - name: privateregistry
+      restartPolicy: Always

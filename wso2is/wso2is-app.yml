@@ -1,0 +1,66 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+   name: wso2is
+  name: wso2is
+  namespace: wso2-suite
+spec:
+  ports:
+  - name: https
+    port: 9446
+    protocol: TCP
+    targetPort: 9446
+
+  - name: http
+    port: 9766
+    protocol: TCP
+    targetPort: 9766
+
+  - name: inta
+    port: 10500
+    protocol: TCP
+    targetPort: 10500
+
+  - name: intb
+    port: 8000
+    protocol: TCP
+    targetPort: 8000
+
+  - name: ldap
+    port: 10389
+    protocol: TCP
+    targetPort: 10389
+
+  selector:
+    name: wso2is
+  type: LoadBalancer
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  labels:
+    name: wso2is
+  name: wso2is
+  namespace: wso2-suite
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: wso2is
+  template:
+    metadata:
+      labels:
+        name: wso2is
+    spec:
+      containers:
+      - image: dipayan/wso2-is
+        imagePullPolicy: Always
+        name: wso2is
+        resources:
+          requests:
+            cpu: 400m
+      imagePullSecrets:
+      - name: privateregistry
+      restartPolicy: Always

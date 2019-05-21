@@ -1,0 +1,145 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+   name: wso2das
+  name: wso2das
+  namespace: wso2-suite
+spec:
+  ports:
+  - name: https
+    port: 9444
+    protocol: TCP
+    targetPort: 9444
+
+  - name: http
+    port: 9764
+    protocol: TCP
+    targetPort: 9764
+
+  - name: spark
+    port: 4040
+    protocol: TCP
+    targetPort: 4040
+
+  - name: sparkh
+    port: 18080
+    protocol: TCP
+    targetPort: 18080
+  
+  - name: thrift
+    port: 7712
+    protocol: TCP
+    targetPort: 7712
+  
+  - name: das
+    port: 7612
+    protocol: TCP
+    targetPort: 7612
+
+  selector:
+    name: wso2das
+  type: LoadBalancer
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  labels:
+    name: wso2das
+  name: wso2das
+  namespace: wso2-suite
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: wso2das
+  template:
+    metadata:
+      labels:
+        name: wso2das
+    spec:
+      containers:
+      - image: dipayan/wso2-analytics 
+        imagePullPolicy: Always
+        name: wso2das
+        ports:
+        - containerPort: 7612
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 400m
+      imagePullSecrets:
+      - name: privateregistry
+      restartPolicy: Always
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+   name: wso2am
+  name: wso2am
+  namespace: wso2-suite
+spec:
+  ports:
+  - name: https
+    port: 9443
+    protocol: TCP
+    targetPort: 9443
+
+  - name: http
+    port: 9763
+    protocol: TCP
+    targetPort: 9763
+
+  - name: nioa
+    port: 8243
+    protocol: TCP
+    targetPort: 8243
+
+  - name: niob
+    port: 8280
+    protocol: TCP
+    targetPort: 8280
+
+  - name: thri
+    port: 7711
+    protocol: TCP
+    targetPort: 7711
+
+  - name: thra
+    port: 10397
+    protocol: TCP
+    targetPort: 10397
+  selector:
+    name: wso2am
+  type: LoadBalancer
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  labels:
+    name: wso2am
+  name: wso2am
+  namespace: wso2-suite
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: wso2am
+  template:
+    metadata:
+      labels:
+        name: wso2am
+    spec:
+      containers:
+      - image: dipayan/wso2-apim
+        imagePullPolicy: Always
+        name: wso2am        
+        resources:
+          requests:
+            cpu: 400m
+      imagePullSecrets:
+      - name: privateregistry
+      restartPolicy: Always
+

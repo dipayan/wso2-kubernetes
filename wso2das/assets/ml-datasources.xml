@@ -1,0 +1,24 @@
+<datasources-configuration xmlns:svns="http://org.wso2.securevault/configuration">
+    <datasources>
+        <datasource>
+            <name>WSO2ML_DB</name>
+            <description>The datasource used for Machine Learner database</description>
+            <jndiConfig>
+                <name>jdbc/WSO2ML_DB</name>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>jdbc:mysql://localhost:3306/wso2ml_db</url>
+                    <username>root</username>
+                    <password>techienation123</password>
+                    <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                    <maxActive>50</maxActive>
+                    <maxWait>60000</maxWait>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
+                </configuration>
+            </definition>
+        </datasource>
+    </datasources>
+</datasources-configuration>
